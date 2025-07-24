@@ -1,4 +1,5 @@
 **👥 Who's it for ** 
+
 This workflow is perfect for anyone who receives a high volume of emails 📥 and wants to automatically organize their Gmail inbox using GPT-4o mini-powered AI 🧠. Whether you're a solo professional or a team, this no-code n8n automation keeps your inbox clean and categorized — effortlessly.
 
 For retroactive email organization, use a different workflow that can classify **existing** emails. This one is focused on **new unread emails only**.
