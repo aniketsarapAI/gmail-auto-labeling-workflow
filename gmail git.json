@@ -1,0 +1,616 @@
+{
+  "name": "gmail git",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e8fecc44-bfcf-42cd-a82d-b2963d8f4c94",
+              "name": "id",
+              "type": "string",
+              "value": "={{ $json.id }}"
+            },
+            {
+              "id": "4967158d-b4ee-41b4-a945-d19462d08886",
+              "name": "text",
+              "type": "string",
+              "value": "={{ $json.text ? $json.text : ($json.html ? $json.html : $json.snippet) }}"
+            },
+            {
+              "id": "48cf009c-69ea-48aa-9de8-d53039aca4a5",
+              "name": "from",
+              "type": "string",
+              "value": "={{ $json.from.value[0].name || $json.from }}"
+            },
+            {
+              "id": "cfd63044-5e92-44c3-ad28-16118c1b83cb",
+              "name": "threadId",
+              "type": "string",
+              "value": "={{ $json.threadId }}"
+            },
+            {
+              "id": "subject-field",
+              "name": "subject",
+              "type": "string",
+              "value": "={{ $json.Subject || $json.subject }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7d0e991d-d237-4a63-946a-433d37666ec6",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -272,
+        688
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an expert email classifier. Based on the email content, classify this email into exactly ONE of these categories:\n\n**NEWSLETTER** - Subscribed content and regular updates:\n- Company newsletters, blog updates, weekly digests\n- Subscription-based content, product announcements\n- Marketing emails from services you subscribe to\n- Educational content series, industry updates\n\n**EVENT INFORMATION** - Events, meetings, and occasions:\n- Event announcements, conference invitations\n- Webinar invitations, workshop notifications\n- Meeting requests, calendar invites\n- Meetup notifications, community events\n\n**JOB UPDATE** - Career and employment related:\n- Job alerts from LinkedIn, Indeed, other job portals\n- Messages from recruiters and HR\n- Application status updates\n- Career opportunities, interview invitations\n\n**BANK UPDATES** - Banking and financial communications:\n- Bank statements, transaction alerts\n- Credit card statements, payment confirmations\n- Account notifications, security alerts\n- Investment updates, financial service notifications\n\n**SOCIAL NETWORKING** - Social platform notifications:\n- LinkedIn notifications (non-job related)\n- GitHub notifications, Twitter updates\n- Facebook notifications, Instagram updates\n- Forum notifications, community platform updates\n\n**SPAM/JUNK** - Unwanted or suspicious emails:\n- Unsolicited promotional emails\n- Phishing attempts, suspicious links\n- Random sales pitches from unknown senders\n- Obvious spam or fraudulent emails\n\n**PROMOTION** - Legitimate promotional and marketing emails:\n- Sales and discount offers from known brands\n- Product launches, special deals\n- Marketing emails from legitimate businesses\n- Promotional content that's not quite spam but commercial\n- Shopping deals, coupon codes, seasonal sales\n\n**IMPORTANT NOTES** -\n- Classify based on intent and content, not just keywords\n- If the email is a professional proposal, business discussion, or client collaboration (e.g. a service offering or follow-up), do not mark it as spam\n- Choose the closest appropriate category if none is a perfect fit\n- Respond with one of the following only: Newsletter, Event Information, Job Update, Bank Updates, Social Networking, Spam/Junk, or Promotion\n\nEmail Details:\nFrom: {{ \\$json.from }}\nSubject: {{ \\$json.subject }}\nContent: {{ \\$json.text }}\n\nRespond with ONLY the category name: Newsletter, Event Information, Job Update, Bank Updates, Social Networking, Spam/Junk, or Promotion\n",
+        "options": {}
+      },
+      "id": "5c48b6e0-5a7e-47b3-ac15-15c8bffbb65a",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        -48,
+        688
+      ],
+      "retryOnFail": true,
+      "typeVersion": 2,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "id": "be74c4cb-81c5-41cd-a958-35bd6ef7f079",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        -80,
+        912
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "JFAGdoj2r6WrsutM",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true,
+        "simple": false,
+        "filters": {
+          "readStatus": "unread"
+        },
+        "options": {}
+      },
+      "id": "535ac6d4-c827-4a39-8942-1ad68815c308",
+      "name": "Get All Unread Messages",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        -496,
+        688
+      ],
+      "webhookId": "WEBHOOK_ID_PLACEHOLDER",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "oB4YINvtwq9IcmDX",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "loose"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "newsletter-condition",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "leftValue": "={{ $json.output.toLowerCase() }}",
+                    "rightValue": "newsletter"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "Newsletter"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "loose"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "event-condition",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "leftValue": "={{ $json.output.toLowerCase() }}",
+                    "rightValue": "event"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "Event Information"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "loose"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "job-condition",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "leftValue": "={{ $json.output.toLowerCase() }}",
+                    "rightValue": "job"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "Job Update"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "loose"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "bank-condition",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "leftValue": "={{ $json.output.toLowerCase() }}",
+                    "rightValue": "bank"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "Bank Updates"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "loose"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "social-condition",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "leftValue": "={{ $json.output.toLowerCase() }}",
+                    "rightValue": "social"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "Social Networking"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "loose"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "spam-condition",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "leftValue": "={{ $json.output.toLowerCase() }}",
+                    "rightValue": "spam"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "Spam/Junk"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "loose"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "promotion-condition",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "leftValue": "={{ $json.output.toLowerCase() }}",
+                    "rightValue": "promotion"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "Promotion"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "id": "abcb8492-4616-48da-bdae-ac1c75126563",
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        352,
+        592
+      ],
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Edit Fields').item.json.id }}",
+        "labelIds": [
+          "YOUR_NEWSLETTER_LABEL_ID"
+        ]
+      },
+      "id": "b6a301cc-cb14-4094-8078-9821b22a2845",
+      "name": "Add \"Newsletter\" Label",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        576,
+        112
+      ],
+      "webhookId": "WEBHOOK_PLACEHOLDER_1",
+      "typeVersion": 2.1,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Edit Fields').item.json.id }}",
+        "labelIds": [
+          "YOUR_EVENT_INFORMATION_LABEL_ID"
+        ]
+      },
+      "id": "da8bda3e-c620-48a5-9105-992a87a49569",
+      "name": "Add \"Event Information\" Label",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        576,
+        304
+      ],
+      "webhookId": "WEBHOOK_PLACEHOLDER_2",
+      "typeVersion": 2.1,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Edit Fields').item.json.id }}",
+        "labelIds": [
+          "YOUR_JOB_UPDATE_LABEL_ID"
+        ]
+      },
+      "id": "c798e473-48d3-4cd3-aac7-f2ee91c4bebf",
+      "name": "Add \"Job Update\" Label",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        576,
+        496
+      ],
+      "webhookId": "WEBHOOK_PLACEHOLDER_3",
+      "typeVersion": 2.1,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Edit Fields').item.json.id }}",
+        "labelIds": [
+          "YOUR_BANK_UPDATES_LABEL_ID"
+        ]
+      },
+      "id": "07e573b6-a624-4eeb-98d7-3dd6331e88e8",
+      "name": "Add \"Bank Updates\" Label",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        576,
+        688
+      ],
+      "webhookId": "WEBHOOK_PLACEHOLDER_4",
+      "typeVersion": 2.1,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Edit Fields').item.json.id }}",
+        "labelIds": [
+          "YOUR_SOCIAL_NETWORKING_LABEL_ID"
+        ]
+      },
+      "id": "88816f7a-8b1f-4009-bf25-6ad25554b97b",
+      "name": "Add \"Social Networking\" Label",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        576,
+        880
+      ],
+      "webhookId": "WEBHOOK_PLACEHOLDER_5",
+      "typeVersion": 2.1,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Edit Fields').item.json.id }}",
+        "labelIds": [
+          "YOUR_SPAM_JUNK_LABEL_ID"
+        ]
+      },
+      "id": "98de17b9-4463-42e7-90a2-a7af13d7562a",
+      "name": "Add \"Spam/Junk\" Label",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        576,
+        1072
+      ],
+      "webhookId": "WEBHOOK_PLACEHOLDER_6",
+      "typeVersion": 2.1,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Edit Fields').item.json.id }}",
+        "labelIds": [
+          "YOUR_PROMOTION_LABEL_ID"
+        ]
+      },
+      "id": "2238da21-7b3d-4b3c-97d9-d8c0e33227b0",
+      "name": "Add \"Promotion\" Label",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        576,
+        1264
+      ],
+      "webhookId": "WEBHOOK_PLACEHOLDER_7",
+      "typeVersion": 2.1,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "## 🎉 AI-POWERED GMAIL AUTO-LABELING\n\n✅ **7 Smart Email Categories:**\n- Newsletter → Subscribed content, updates\n- Event Information → Meetings, conferences  \n- Job Update → LinkedIn, recruiters, opportunities\n- Bank Updates → Statements, alerts, transactions\n- Social Networking → GitHub, Twitter, LinkedIn\n- Spam/Junk → Unwanted promotional emails\n- Promotion → Legitimate sales, deals, offers\n\n✅ **Features:**\n- Daily 5 AM processing\n- Unread emails only\n- Smart AI classification\n- Emails stay unread for review\n\n**🔧 SETUP REQUIRED - See README**",
+        "height": 400,
+        "width": 320,
+        "color": 2
+      },
+      "id": "17752875-cecf-4b37-98fb-f35b5371c02c",
+      "name": "📧 WORKFLOW INFO",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -192,
+        80
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### 🛠️ SETUP INSTRUCTIONS:\n\n**1. Create Gmail Labels:**\n- Newsletter\n- Event Information  \n- Job Update\n- Bank Updates\n- Social Networking\n- Spam/Junk\n- Promotion\n\n**2. Get Label IDs:**\n- Use Gmail API or n8n Gmail node\n- Replace all `YOUR_*_LABEL_ID` placeholders\n\n**3. Configure Credentials:**\n- Gmail OAuth2\n- OpenAI API Key\n\n**4. Test & Activate**\n\n**See full README for detailed setup!**",
+        "height": 400,
+        "width": 320,
+        "color": 3
+      },
+      "id": "00d67e13-47fa-4f53-a46c-f6da8ee4bc76",
+      "name": "🛠️ SETUP GUIDE",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        144,
+        80
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6
+            }
+          ]
+        }
+      },
+      "id": "b4a0931d-29cc-4705-88f9-8d106886f186",
+      "name": "6 hours trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        -720,
+        688
+      ],
+      "typeVersion": 1.2
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Add \"Newsletter\" Label",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add \"Event Information\" Label",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add \"Job Update\" Label",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add \"Bank Updates\" Label",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add \"Social Networking\" Label",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add \"Spam/Junk\" Label",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add \"Promotion\" Label",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get All Unread Messages": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6 hours trigger": {
+      "main": [
+        [
+          {
+            "node": "Get All Unread Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "03f649d3-eece-4b78-b8dc-a3ea59e2be15",
+  "meta": {
+    "instanceId": "5d76bbbb40c4cb32c8d258fa72660106e0462f6fe344c56cceb8b8f5180c30fa"
+  },
+  "id": "cFOa0hbQ70fUQ3nL",
+  "tags": []
+}
