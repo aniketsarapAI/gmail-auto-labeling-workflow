@@ -1,16 +1,16 @@
-👥 Who's it for  
+**👥 Who's it for ** 
 This workflow is perfect for anyone who receives a high volume of emails 📥 and wants to automatically organize their Gmail inbox using GPT-4o mini-powered AI 🧠. Whether you're a solo professional or a team, this no-code n8n automation keeps your inbox clean and categorized — effortlessly.
 
 For retroactive email organization, use a different workflow that can classify **existing** emails. This one is focused on **new unread emails only**.
 
 ---
 
-🤖 What it does  
+**🤖 What it does**  
 This automation fetches unread emails, passes them to an AI Agent that classifies the content into one of 7 categories, and automatically applies the corresponding Gmail label. It runs every 6 hours and keeps emails unread for your manual review after classification.
 
 ---
 
-⚙️ How it works  
+**⚙️ How it works  **
 📆 **Schedule Trigger** – Runs every 6 hours to scan new unread emails  
 📬 **Gmail Node (Get All)** – Fetches unread messages from your inbox  
 🛠️ **Set Node (Edit Fields)** – Extracts and formats metadata (from, subject, body)  
@@ -20,7 +20,7 @@ This automation fetches unread emails, passes them to an AI Agent that classifie
 
 ---
 
-📋 Categories Used  
+**📋 Categories Used ** 
 - Newsletter  
 - Event Information  
 - Job Update  
@@ -33,7 +33,7 @@ All labels must already exist in your Gmail account and be mapped using their **
 
 ---
 
-📋 Requirements  
+**📋 Requirements  **
 - ✅ Gmail account connected to n8n with OAuth2  
 - ✅ Labels created in Gmail for each category  
 - ✅ OpenAI API Key with GPT-4o access  
@@ -43,7 +43,7 @@ All labels must already exist in your Gmail account and be mapped using their **
 
 ---
 
-🛠️ How to set up  
+**🛠️ How to set up ** 
 1. 🏷️ Create the 7 Gmail labels in your inbox  
 2. 🔑 Connect Gmail and OpenAI credentials in n8n  
 3. 🧠 Update the AI Agent prompt or keep the one provided  
@@ -53,7 +53,7 @@ All labels must already exist in your Gmail account and be mapped using their **
 
 ---
 
-🎨 How to customize the workflow  
+**🎨 How to customize the workflow ** 
 - Add or remove categories by updating:
   - AI Agent prompt  
   - Switch node conditions  
@@ -63,7 +63,7 @@ All labels must already exist in your Gmail account and be mapped using their **
 
 ---
 
-🧠 Powered By  
+**🧠 Powered By ** 
 - [n8n.io](https://n8n.io) – No-code workflow automation  
 - [OpenAI GPT-4o mini](https://platform.openai.com) – Email classification intelligence  
 - [Gmail API](https://developers.google.com/gmail/api) – Inbox access and labeling
@@ -71,4 +71,4 @@ All labels must already exist in your Gmail account and be mapped using their **
 ---
 
 💬 Need help or want to contribute?  
-Fork the repo, drop a star ⭐, or connect with [Aniket Sarap on LinkedIn](https://www.linkedin.com/in/aniketsarap). Contributions welcome!
+Fork the repo, drop a star ⭐, or connect with [Me on LinkedIn](www.linkedin.com/in/aniket-sarap-931b9b12a). 
