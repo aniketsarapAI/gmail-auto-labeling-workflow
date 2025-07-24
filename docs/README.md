@@ -1,4 +1,4 @@
-**👥 Who's it for ** 
+**👥 Who's it for** 
 
 This workflow is perfect for anyone who receives a high volume of emails 📥 and wants to automatically organize their Gmail inbox using GPT-4o mini-powered AI 🧠. Whether you're a solo professional or a team, this no-code n8n automation keeps your inbox clean and categorized — effortlessly.
 
@@ -11,7 +11,7 @@ This automation fetches unread emails, passes them to an AI Agent that classifie
 
 ---
 
-**⚙️ How it works  **
+**⚙️ How it works**
 📆 **Schedule Trigger** – Runs every 6 hours to scan new unread emails  
 📬 **Gmail Node (Get All)** – Fetches unread messages from your inbox  
 🛠️ **Set Node (Edit Fields)** – Extracts and formats metadata (from, subject, body)  
@@ -21,7 +21,7 @@ This automation fetches unread emails, passes them to an AI Agent that classifie
 
 ---
 
-**📋 Categories Used ** 
+**📋 Categories Used** 
 - Newsletter  
 - Event Information  
 - Job Update  
@@ -34,7 +34,7 @@ All labels must already exist in your Gmail account and be mapped using their **
 
 ---
 
-**📋 Requirements  **
+**📋 Requirements**
 - ✅ Gmail account connected to n8n with OAuth2  
 - ✅ Labels created in Gmail for each category  
 - ✅ OpenAI API Key with GPT-4o access  
@@ -44,7 +44,7 @@ All labels must already exist in your Gmail account and be mapped using their **
 
 ---
 
-**🛠️ How to set up ** 
+**🛠️ How to set up** 
 1. 🏷️ Create the 7 Gmail labels in your inbox  
 2. 🔑 Connect Gmail and OpenAI credentials in n8n  
 3. 🧠 Update the AI Agent prompt or keep the one provided  
@@ -54,7 +54,7 @@ All labels must already exist in your Gmail account and be mapped using their **
 
 ---
 
-**🎨 How to customize the workflow ** 
+**🎨 How to customize the workflow** 
 - Add or remove categories by updating:
   - AI Agent prompt  
   - Switch node conditions  
@@ -64,7 +64,7 @@ All labels must already exist in your Gmail account and be mapped using their **
 
 ---
 
-**🧠 Powered By ** 
+**🧠 Powered By** 
 - [n8n.io](https://n8n.io) – No-code workflow automation  
 - [OpenAI GPT-4o mini](https://platform.openai.com) – Email classification intelligence  
 - [Gmail API](https://developers.google.com/gmail/api) – Inbox access and labeling
