@@ -70,4 +70,5 @@ All labels must already exist in your Gmail account and be mapped using their **
 ---
 
 💬 Need help or want to contribute?  
-Fork the repo, drop a star ⭐, or connect with [Me on Linkedin](www.linkedin.com/in/aniket-sarap-931b9b12a). 
+Fork the repo, drop a star ⭐, or connect with [Me on LinkedIn](https://www.linkedin.com/in/aniket-sarap-931b9b12a)
+. 
