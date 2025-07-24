@@ -39,8 +39,6 @@ All labels must already exist in your Gmail account and be mapped using their **
 - ✅ Labels created in Gmail for each category  
 - ✅ OpenAI API Key with GPT-4o access  
 - ✅ n8n instance (self-hosted or cloud)  
-- ✅ AI Agent node (LangChain agent)  
-- ✅ Switch + Gmail label nodes configured with correct label IDs
 
 ---
 
